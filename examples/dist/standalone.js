@@ -1031,12 +1031,13 @@ var Select = _react2['default'].createClass({
 		}
 	},
 
-	renderMenu: function renderMenu(options, valueArray, focusedOption) {
+	renderMenu: function renderMenu(controlElement, options, valueArray, focusedOption) {
 		var _this4 = this;
 
 		if (options && options.length) {
 			if (this.props.menuRenderer) {
 				return this.props.menuRenderer({
+					controlElement: controlElement,
 					focusedOption: focusedOption,
 					focusOption: this.focusOption,
 					labelKey: this.props.labelKey,
@@ -1144,26 +1145,27 @@ var Select = _react2['default'].createClass({
 			'is-searchable': this.props.searchable,
 			'has-value': valueArray.length
 		});
+		var controlElement = _react2['default'].createElement(
+			'div',
+			{ ref: 'control',
+				className: 'Select-control',
+				style: this.props.style,
+				onKeyDown: this.handleKeyDown,
+				onMouseDown: this.handleMouseDown,
+				onTouchEnd: this.handleTouchEnd,
+				onTouchStart: this.handleTouchStart,
+				onTouchMove: this.handleTouchMove },
+			this.renderValue(valueArray, isOpen),
+			this.renderInput(valueArray),
+			this.renderLoading(),
+			this.renderClear(),
+			this.renderArrow()
+		);
 		return _react2['default'].createElement(
 			'div',
 			{ ref: 'wrapper', className: className, style: this.props.wrapperStyle },
 			this.renderHiddenField(valueArray),
-			_react2['default'].createElement(
-				'div',
-				{ ref: 'control',
-					className: 'Select-control',
-					style: this.props.style,
-					onKeyDown: this.handleKeyDown,
-					onMouseDown: this.handleMouseDown,
-					onTouchEnd: this.handleTouchEnd,
-					onTouchStart: this.handleTouchStart,
-					onTouchMove: this.handleTouchMove },
-				this.renderValue(valueArray, isOpen),
-				this.renderInput(valueArray),
-				this.renderLoading(),
-				this.renderClear(),
-				this.renderArrow()
-			),
+			controlElement,
 			isOpen ? _react2['default'].createElement(
 				'div',
 				{ ref: 'menuContainer', className: 'Select-menu-outer', style: this.props.menuContainerStyle },
@@ -1173,7 +1175,7 @@ var Select = _react2['default'].createClass({
 						style: this.props.menuStyle,
 						onScroll: this.handleMenuScroll,
 						onMouseDown: this.handleMouseDownOnMenu },
-					this.renderMenu(options, !this.props.multi ? valueArray : null, focusedOption)
+					this.renderMenu(controlElement, options, !this.props.multi ? valueArray : null, focusedOption)
 				)
 			) : null
 		);
